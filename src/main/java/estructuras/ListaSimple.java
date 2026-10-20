@@ -24,7 +24,7 @@ public class ListaSimple {
         return cabeza == null;
     }
 
-    // Método para insertar elementos en la lista
+    //insertar elementos en la lista
     public void insertar(Object dato) {
         NodoSimple nuevo = new NodoSimple(dato);
         if (estaVacia()) {
@@ -39,7 +39,7 @@ public class ListaSimple {
         tamanio++; // Incrementar tamaño
     }
 
-    // Método para mostrar los elementos de la lista en consola
+    // mostrar  elementos de la lista
     public void mostrar() {
         if (estaVacia()) {
             System.out.println("No hay usuarios registrados en el sistema.");
