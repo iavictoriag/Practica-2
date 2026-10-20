@@ -8,44 +8,83 @@ package estructuras;
  *
  * @author vicky
  */
+import modelo.Usuario; // O Residente según tu convención
 
-//recorre elementos hacia adelante y hacia atrás
-public class ListaDoble<T> {
-    private NodoDoble<T> inicio;//contador inicial
-    private NodoDoble<T> fin;
-    private int tamanio;// contado total de elementos
+class NodoDoble {
+    private Object dato;
+    private NodoDoble siguiente;
+    private NodoDoble anterior;
+
+    public NodoDoble(Object dato) {
+        this.dato = dato;
+        this.siguiente = null;
+        this.anterior = null;
+    }
+
+    public Object getDato() { return dato; }
+    public void setDato(Object dato) { this.dato = dato; }
+    public NodoDoble getSiguiente() { return siguiente; }
+    public void setSiguiente(NodoDoble siguiente) { this.siguiente = siguiente; }
+    public NodoDoble getAnterior() { return anterior; }
+    public void setAnterior(NodoDoble anterior) { this.anterior = anterior; }
+}
+
+public class ListaDoble {
+    private NodoDoble cabeza;
+    private NodoDoble cola;
+    private int tamanio;
 
     public ListaDoble() {
-        this.inicio = null;
-        this.fin = null;
+        this.cabeza = null;
+        this.cola = null;
         this.tamanio = 0;
     }
 
     public boolean estaVacia() {
-        return inicio == null;
+        return cabeza == null;
     }
 
-    // Insertar al final 
-    public void insertar(T dato) {
-        NodoDoble<T> nuevo = new NodoDoble<>(dato);//nuevo nodo encapsulado
-        
-        if (estaVacia()) {//si esta vacia el nodo va al inicio
-            inicio = nuevo;
-            fin = nuevo;
-        } else {//buscamos al ultimo nodo
-            fin.setSiguiente(nuevo); //  apunta al nuevo
-            nuevo.setAnterior(fin); // apunta hacia atrás al antiguo fin
-            fin = nuevo; // nuevo nodo al fin 
+    // Insertar al final de la lista doble
+    public void insertar(Object dato) {
+        NodoDoble nuevo = new NodoDoble(dato);
+        if (estaVacia()) {
+            cabeza = nuevo;
+            cola = nuevo;
+        } else {
+            cola.setSiguiente(nuevo);
+            nuevo.setAnterior(cola);
+            cola = nuevo;
         }
         tamanio++;
     }
 
-    // enseña desde el inicio hasta el fin
-    public void mostrarAdelante() {
-        NodoDoble<T> actual = inicio;
+    // Buscar residente por ID (asumiendo que el objeto tiene un método getId())
+    public Object buscarPorId(String idBuscado) {
+        NodoDoble actual = cabeza;
         while (actual != null) {
-            System.out.println(actual.getDato());
-            actual = actual.getSiguiente();//siguiente nodo
+            Usuario u = (Usuario) actual.getDato();
+            if (u.getId().equalsIgnoreCase(idBuscado)) {
+                return u;
+            }
+            actual = actual.getSiguiente();
         }
+        return null;
+    }
+
+    // Mostrar elementos hacia adelante
+    public void mostrarAdelante() {
+        NodoDoble actual = cabeza;
+        while (actual != null) {
+            System.out.println(actual.getDato().toString());
+            actual = actual.getSiguiente();
+        }
+    }
+
+    public int getTamanio() {
+        return tamanio;
+    }
+
+    public NodoDoble getCabeza() {
+        return cabeza;
     }
 }
