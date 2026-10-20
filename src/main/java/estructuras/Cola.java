@@ -4,6 +4,9 @@
  */
 package estructuras;
 
+/**
+ * 
+ */
 class NodoCola {
     private Object dato;
     private NodoCola siguiente;
@@ -18,14 +21,25 @@ class NodoCola {
     public void setSiguiente(NodoCola siguiente) { this.siguiente = siguiente; }
 }
 
+/**
+ * 
+ */
 public class Cola {
-   
+    private NodoCola frente;
+    private NodoCola fin;
+    private int tamanio;
+
+    public Cola() {
+        this.frente = null;
+        this.fin = null;
+        this.tamanio = 0;
+    }
 
     public boolean estaVacia() {
         return frente == null;
     }
 
-    // Encolar (Enqueue)
+    // Encolar agrega un nuevo elemento al final de la cola
     public void encolar(Object dato) {
         NodoCola nuevo = new NodoCola(dato);
         if (estaVacia()) {
@@ -38,7 +52,7 @@ public class Cola {
         tamanio++;
     }
 
-    // Desencolar (Dequeue)
+    // Desencolar que extrae y retorna el elemento que está al frente de la cola
     public Object desencolar() {
         if (estaVacia()) return null;
         Object dato = frente.getDato();
