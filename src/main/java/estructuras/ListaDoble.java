@@ -29,7 +29,7 @@ class NodoDoble {
     public void setAnterior(NodoDoble anterior) { this.anterior = anterior; }
 }
 
-public class ListaDoble {
+public class ListaDoble {//inicia la lista doble
     private NodoDoble cabeza;
     private NodoDoble cola;
     private int tamanio;
@@ -40,7 +40,7 @@ public class ListaDoble {
         this.tamanio = 0;
     }
 
-    public boolean estaVacia() {
+    public boolean estaVacia() {//mira si la lista esta vacia
         return cabeza == null;
     }
 
@@ -58,7 +58,7 @@ public class ListaDoble {
         tamanio++;
     }
 
-    // Buscar residente por ID (asumiendo que el objeto tiene un método getId())
+    // Buscar residente por ID 
     public Object buscarPorId(String idBuscado) {
         NodoDoble actual = cabeza;
         while (actual != null) {
@@ -71,11 +71,11 @@ public class ListaDoble {
         return null;
     }
 
-    // Mostrar elementos hacia adelante
+    // Mostrar elementos 
     public void mostrarAdelante() {
         NodoDoble actual = cabeza;
         while (actual != null) {
-            System.out.println(actual.getDato().toString());
+            System.out.println(actual.getDato().toString());//imprime los elementos
             actual = actual.getSiguiente();
         }
     }
