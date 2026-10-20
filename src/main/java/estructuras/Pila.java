@@ -8,6 +8,18 @@ package estructuras;
  *
  * @author vicky
  */
-public class Pila {
-    
+class NodoPila {
+    private String evento;
+    private NodoPila siguiente;
+
+    public NodoPila(String evento) {
+        this.evento = evento;
+        this.siguiente = null;
+    }
+
+    public String getEvento() { return evento; }
+    public NodoPila getSiguiente() { return siguiente; }
+    public void setSiguiente(NodoPila siguiente) { this.siguiente = siguiente; }
+}
+
 }
