@@ -1,69 +1,90 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany._proyecto2;
 
 import java.util.Scanner;
 import modelo.Usuario;
 import modelo.Vehiculo;
+import estructuras.ListaSimple; 
 
 public class App {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        ListaSimple listaUsuarios = new ListaSimple();
 
-        System.out.println("==========================================");
-        System.out.println("   REGISTRO DE USUARIO Y VEHÍCULO");
-        System.out.println("==========================================");
+        int opcion = 0;
 
-        // Pedir los datos del usuario
-        System.out.print("Ingrese ID del usuario: ");
-        String id = scanner.nextLine();
+        while (opcion != 4) {
+            System.out.println("\n==========================================");
+            System.out.println("      SISTEMA RESIPARK - MENÚ PRINCIPAL   ");
+            System.out.println("==========================================");
+            System.out.println("1. Registrar Usuario");
+            System.out.println("2. Registrar Vehículo");
+            System.out.println("3. Mostrar Registros");
+            System.out.println("4. Salir");
+            System.out.print("Seleccione una opción: ");
 
-        System.out.print("Ingrese nombre completo: ");
-        String nombre = scanner.nextLine();
+            // Leer la opción 
+            if (scanner.hasNextInt()) {
+                opcion = scanner.nextInt();
+                scanner.nextLine(); // Limpiar el buffer
+            } else {
+                System.out.println("Por favor, ingrese un número válido.");
+                scanner.nextLine();
+                continue;
+            }
 
-        System.out.print("Ingrese número de casa: ");
-        String numeroCasa = scanner.nextLine();
+            if (opcion == 1) {
+                System.out.println("\n--- REGISTRO DE USUARIO ---");
+                System.out.print("Ingrese ID del usuario: ");
+                String id = scanner.nextLine();
 
-        System.out.print("Ingrese teléfono: ");
-        String telefono = scanner.nextLine();
+                System.out.print("Ingrese nombre completo: ");
+                String nombre = scanner.nextLine();
 
-        // Crear el Usuario con los datos ingresados
-        Usuario usuario1 = new Usuario(id, nombre, numeroCasa, telefono);
+                System.out.print("Ingrese número de casa: ");
+                String numeroCasa = scanner.nextLine();
 
-        System.out.println("\n--- Datos del Usuario Registrado ---");
-        System.out.println(usuario1.toString());
+                System.out.print("Ingrese teléfono: ");
+                String telefono = scanner.nextLine();
 
-        //Pedir los datos del vehículo 
-        System.out.println("\n==========================================");
-        System.out.println("   INGRESO DE VEHÍCULO DE PRUEBA");
-        System.out.println("==========================================");
+                // crear nuevo usuario 
+                Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono);
+                
+                // CAMBIADO AQUÍ: Usamos insertar en lugar de agregar
+                listaUsuarios.insertar(usuarioNuevo);
+                System.out.println("¡Usuario registrado con éxito!");
 
-        System.out.print("Ingrese la placa: ");
-        String placa = scanner.nextLine();
+            } else if (opcion == 2) {
+                System.out.println("\n--- REGISTRO DE VEHÍCULO ---");
+                System.out.print("Ingrese la placa del vehículo: ");
+                String placa = scanner.nextLine();
 
-        System.out.print("Ingrese la marca: ");
-        String marca = scanner.nextLine();
+                System.out.print("Ingrese la marca: ");
+                String marca = scanner.nextLine();
 
-        System.out.print("Ingrese el modelo: ");
-        String modelo = scanner.nextLine();
+                System.out.print("Ingrese el modelo: ");
+                String modelo = scanner.nextLine();
 
-        System.out.print("Ingrese el color: ");
-        String color = scanner.nextLine();
+                System.out.print("Ingrese el color: ");
+                String color = scanner.nextLine();
 
-        System.out.print("Ingrese el tipo de vehículo: ");
-        String tipo = scanner.nextLine();
+                System.out.print("Ingrese el tipo de vehículo: ");
+                String tipo = scanner.nextLine();
 
-        // Crear el  Vehículo 
-        Vehiculo miVehiculo = new Vehiculo(placa, marca, modelo, color, tipo);
+                // crear el  Vehículo
+                Vehiculo vehiculoNuevo = new Vehiculo(placa, marca, modelo, color, tipo);
+                System.out.println("Vehículo registrado: " + vehiculoNuevo.getPlaca() + " (" + vehiculoNuevo.getMarca() + ")");
 
-        System.out.println("\n--- Vehículo Registrado con Éxito ---");
-        System.out.println("Placa: " + miVehiculo.getPlaca());
-        System.out.println("Marca: " + miVehiculo.getMarca());
+            } else if (opcion == 3) {
+                System.out.println("\n--- REGISTROS EN EL SISTEMA ---");
+                listaUsuarios.mostrar();
 
-        System.out.println("==========================================");
+            } else if (opcion == 4) {
+                System.out.println("\nSaliendo del sistema ResiPark... ¡Hasta luego!");
+            } else {
+                System.out.println("Opción no válida. Por favor, intente de nuevo.");
+            }
+        }
 
         scanner.close();
     }

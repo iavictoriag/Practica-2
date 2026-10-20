@@ -4,6 +4,8 @@
  */
 package estructuras;
 
+import modelo.Usuario;
+
 /**
  *
  * @author vicky
@@ -16,14 +18,15 @@ public class ListaSimple {
         this.cabeza = null;
         this.tamanio = 0;
     }
-    // leemos la lista 
+
+    // Comprobar si la lista está vacía
     public boolean estaVacia() {
         return cabeza == null;
     }
 
+    // Método para insertar elementos en la lista
     public void insertar(Object dato) {
         NodoSimple nuevo = new NodoSimple(dato);
-        // iniciar el nuevo nodo
         if (estaVacia()) {
             cabeza = nuevo;
         } else {
@@ -33,13 +36,28 @@ public class ListaSimple {
             }
             actual.setSiguiente(nuevo);
         }
-        tamanio++; // mas lista
+        tamanio++; // Incrementar tamaño
     }
-    // tamaño de la lista
+
+    // Método para mostrar los elementos de la lista en consola
+    public void mostrar() {
+        if (estaVacia()) {
+            System.out.println("No hay usuarios registrados en el sistema.");
+            return;
+        }
+        NodoSimple actual = cabeza;
+        while (actual != null) {
+            System.out.println(actual.getDato().toString());
+            actual = actual.getSiguiente();
+        }
+    }
+
+    // Obtener el tamaño de la lista
     public int getTamanio() {
         return tamanio;
     }
 
+    // Obtener la cabeza de la lista
     public NodoSimple getCabeza() {
         return cabeza;
     }
