@@ -5,13 +5,14 @@
 package estructuras;
 
 /**
- *
+ * 
+ * 
  * @author vicky
  */
 public class NodoDoble<T> {
-    private T dato; //informacion
-    private NodoDoble<T> siguiente;
-    private NodoDoble<T> anterior;
+    private T dato; //info almacenada en el nodo
+    private NodoDoble<T> siguiente; // Apuntado al nodo siguiente
+    private NodoDoble<T> anterior;  // Apuntado al nodo anterior
     
     public NodoDoble(T dato) {
         this.dato = dato;
@@ -19,7 +20,6 @@ public class NodoDoble<T> {
         this.anterior = null;
     }
 
-    // Getters y Setters
     public T getDato() {
         return dato;
     }

@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package com.mycompany._proyecto2;
 
 import java.util.Scanner;
@@ -5,11 +9,17 @@ import modelo.Usuario;
 import modelo.Vehiculo;
 import estructuras.ListaSimple; 
 
+/**
+ * 
+ * 
+ * 
+ * @author vicky
+ */
 public class App {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ListaSimple listaUsuarios = new ListaSimple();//almacenar usuario
+        ListaSimple listaUsuarios = new ListaSimple(); // almacena los usuarios registrados
 
         int opcion = 0;
 
@@ -21,19 +31,20 @@ public class App {
             System.out.println("2. Registrar Vehículo");
             System.out.println("3. Mostrar Registros");
             System.out.println("4. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opcion: ");
 
-            // Leer la opción 
+            // valida que sea un número entero
             if (scanner.hasNextInt()) {
                 opcion = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer
+                scanner.nextLine(); // Limpiar el buffer de entrada
             } else {
                 System.out.println("Por favor, ingrese un numero valido.");
                 scanner.nextLine();
                 continue;
             }
 
-            if (opcion == 1) {//opcion 1 datos y registro
+            //nuevo usuario residente
+            if (opcion == 1) {
                 System.out.println("\n--- REGISTRO DE USUARIO ---");
                 System.out.print("Ingrese ID del usuario: ");
                 String id = scanner.nextLine();
@@ -47,15 +58,39 @@ public class App {
                 System.out.print("Ingrese telefono: ");
                 String telefono = scanner.nextLine();
 
-                // crear nuevo usuario 
-                Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono);
+                System.out.print("¿Es socio? (S = Si / N = No): ");
+                char esSocio = scanner.nextLine().toUpperCase().charAt(0);
+
+                // Crear nuevo usuario
+                Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono, esSocio);
                 
-                // CAMBIADO AQUÍ: Usamos insertar en lugar de agregar
+                // el usualio en la lista
                 listaUsuarios.insertar(usuarioNuevo);
                 System.out.println("¡Usuario registrado con exito!");
 
-            } else if (opcion == 2) {//opcion 2 registrar vehiculo
-                System.out.println("\n--- REGISTRO DE VEHÍCULO ---");
+            //registrar vehiculo y asociarlo al residente correspondiente
+            } else if (opcion == 2) {
+                System.out.println("\n--- REGISTRO DE VEHICULO ---");
+                System.out.print("Ingrese el ID del residente propietario: ");
+                String idResidente = scanner.nextLine();
+
+                // Buscar al residente
+                Usuario propietario = null;
+                var actual = listaUsuarios.getCabeza();
+                while (actual != null) {
+                    Usuario u = (Usuario) actual.getDato();
+                    if (u.getId().equalsIgnoreCase(idResidente)) {
+                        propietario = u;
+                        break;
+                    }
+                    actual = actual.getSiguiente();
+                }
+
+                if (propietario == null) {
+                    System.out.println("Error: No se encontro un residente con el ID ingresado.");
+                    continue;
+                }
+
                 System.out.print("Ingrese la placa del vehiculo: ");
                 String placa = scanner.nextLine();
 
@@ -71,18 +106,25 @@ public class App {
                 System.out.print("Ingrese el tipo de vehiculo: ");
                 String tipo = scanner.nextLine();
 
-                // crear el  Vehículo
+                // Crear el Vehículo
                 Vehiculo vehiculoNuevo = new Vehiculo(placa, marca, modelo, color, tipo);
-                System.out.println("Vehiculo registrado: " + vehiculoNuevo.getPlaca() + " (" + vehiculoNuevo.getMarca() + ")");
+                
+                // Intentar agregarlo al residente
+                boolean agregado = propietario.agregarVehiculo(vehiculoNuevo);
+                if (agregado) {
+                    System.out.println("¡Vehiculo asociado exitosamente al residente " + propietario.getNombre() + "!");
+                }
 
-            } else if (opcion == 3) {// opcion 3 registrados 
+            //mostrar los registros almacenados
+            } else if (opcion == 3) {
                 System.out.println("\n--- REGISTROS EN EL SISTEMA ---");
                 listaUsuarios.mostrar();
 
-            } else if (opcion == 4) {// opcio 4 salir
+            // Opción 4: Salir del programa
+            } else if (opcion == 4) {
                 System.out.println("\nSaliendo del sistema ResiPark... ¡Hasta luego!");
             } else {
-                System.out.println("Opción no valida. Por favor, intente de nuevo.");
+                System.out.println("Opcion no valida. Por favor, intente de nuevo.");
             }
         }
 

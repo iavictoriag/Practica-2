@@ -4,49 +4,34 @@
  */
 package estructuras;
 
+import modelo.Usuario;
+
 /**
- *
+ * 
+ * 
+ * 
  * @author vicky
  */
-import modelo.Usuario; // O Residente según tu convención
-
-class NodoDoble {
-    private Object dato;
-    private NodoDoble siguiente;
-    private NodoDoble anterior;
-
-    public NodoDoble(Object dato) {
-        this.dato = dato;
-        this.siguiente = null;
-        this.anterior = null;
-    }
-
-    public Object getDato() { return dato; }
-    public void setDato(Object dato) { this.dato = dato; }
-    public NodoDoble getSiguiente() { return siguiente; }
-    public void setSiguiente(NodoDoble siguiente) { this.siguiente = siguiente; }
-    public NodoDoble getAnterior() { return anterior; }
-    public void setAnterior(NodoDoble anterior) { this.anterior = anterior; }
-}
-
-public class ListaDoble {//inicia la lista doble
-    private NodoDoble cabeza;
-    private NodoDoble cola;
+public class ListaDoble {
+    private NodoDoble<Object> cabeza;
+    private NodoDoble<Object> cola;
     private int tamanio;
 
+    // lista doble vacía
     public ListaDoble() {
         this.cabeza = null;
         this.cola = null;
         this.tamanio = 0;
     }
 
-    public boolean estaVacia() {//mira si la lista esta vacia
+    //si la lista no contiene elementos
+    public boolean estaVacia() {
         return cabeza == null;
     }
 
-    // Insertar al final de la lista doble
+    //nuevo elemento al final de la lista doble
     public void insertar(Object dato) {
-        NodoDoble nuevo = new NodoDoble(dato);
+        NodoDoble<Object> nuevo = new NodoDoble<>(dato);
         if (estaVacia()) {
             cabeza = nuevo;
             cola = nuevo;
@@ -58,33 +43,35 @@ public class ListaDoble {//inicia la lista doble
         tamanio++;
     }
 
-    // Buscar residente por ID 
+    // Busca un residente dentro de la lista utilizando su ID único
     public Object buscarPorId(String idBuscado) {
-        NodoDoble actual = cabeza;
+        NodoDoble<Object> actual = cabeza;
         while (actual != null) {
             Usuario u = (Usuario) actual.getDato();
             if (u.getId().equalsIgnoreCase(idBuscado)) {
-                return u;
+                return u; // Retorna el usuario encontrado
             }
             actual = actual.getSiguiente();
         }
-        return null;
+        return null; // Si no lo encuentra, retorna nulo
     }
 
-    // Mostrar elementos 
+    // Recorre e imprime los elementos desde el inicio hasta el final
     public void mostrarAdelante() {
-        NodoDoble actual = cabeza;
+        NodoDoble<Object> actual = cabeza;
         while (actual != null) {
-            System.out.println(actual.getDato().toString());//imprime los elementos
+            System.out.println(actual.getDato().toString());
             actual = actual.getSiguiente();
         }
     }
 
+    // Obtener el tamaño actual de la lista
     public int getTamanio() {
         return tamanio;
     }
 
-    public NodoDoble getCabeza() {
+    // Obtener el nodo cabeza de la lista
+    public NodoDoble<Object> getCabeza() {
         return cabeza;
     }
 }
