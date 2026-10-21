@@ -5,8 +5,7 @@
 package estructuras;
 
 /**
- *
- * @author vicky
+ * 
  */
 class NodoPila {
     private String evento;
@@ -22,4 +21,40 @@ class NodoPila {
     public void setSiguiente(NodoPila siguiente) { this.siguiente = siguiente; }
 }
 
+/**
+ * 
+ */
+public class Pila {
+    private NodoPila cima;
+    private int tamanio;
+
+    public Pila() {
+        this.cima = null;
+        this.tamanio = 0;
+    }
+
+    public boolean estaVacia() {
+        return cima == null;
+    }
+
+    // Apila 
+    public void apilar(String evento) {
+        NodoPila nuevo = new NodoPila(evento);
+        nuevo.setSiguiente(cima);
+        cima = nuevo;
+        tamanio++;
+    }
+
+    // Desapila
+    public String desapilar() {
+        if (estaVacia()) return null;
+        String evento = cima.getEvento();
+        cima = cima.getSiguiente();
+        tamanio--;
+        return evento;
+    }
+
+    public int getTamanio() {
+        return tamanio;
+    }
 }
