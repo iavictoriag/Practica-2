@@ -8,22 +8,26 @@ package modelo;
  *
  * @author vicky
  */
-public class Vehiculo {
-    private String placa;
-    private String marca;
-    private String modelo;
-    private String color;
-    private String tipoVehiculo; // "Residente", "Visitante"
 
-    public Vehiculo(String placa, String marca, String modelo, String color, String tipoVehiculo) {
+/**
+ **/
+public class Vehiculo {
+    private String placa;// placa unica en todo el sistema
+    private String marca;
+    private String modelo;// Línea o modelo del vehículo
+    private String color; 
+    private String tipo;// de vehículo 
+    private String estado;//FUERA, EN_COLA_ENTRADA, ESTACIONADO, EN_COLA_SALIDA
+
+    public Vehiculo(String placa, String marca, String modelo, String color, String tipo) {
         this.placa = placa;
         this.marca = marca;
         this.modelo = modelo;
         this.color = color;
-        this.tipoVehiculo = tipoVehiculo;
+        this.tipo = tipo;
+        this.estado = "FUERA"; //al crearse el vehículo se sca del residencial
     }
 
-    // Getters y Setters
     public String getPlaca() {
         return placa;
     }
@@ -56,16 +60,24 @@ public class Vehiculo {
         this.color = color;
     }
 
-    public String getTipoVehiculo() {
-        return tipoVehiculo;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setTipoVehiculo(String tipoVehiculo) {
-        this.tipoVehiculo = tipoVehiculo;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     @Override
     public String toString() {
-        return "Placa: " + placa + " | " + marca + " " + modelo + " (" + color + ") - [" + tipoVehiculo + "]";
+        return "Placa: " + placa + " | Marca: " + marca + " | Modelo: " + modelo + " | Tipo: " + tipo + " | Estado: " + estado;
     }
 }
