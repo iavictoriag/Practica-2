@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package modelo;
-
+import estructuras.ListaSimple;
 /**
  *
  * @author vicky
@@ -14,6 +14,7 @@ package modelo;
  * 
  */
 public class Usuario {
+    
     private String id; // unico del residente
     private String nombre;
     private String numeroCasa;// # de casa del residencial
