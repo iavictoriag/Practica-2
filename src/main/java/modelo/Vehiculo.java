@@ -16,7 +16,7 @@ public class Vehiculo {
     private String marca;
     private String modelo;// Línea o modelo del vehículo
     private String color; 
-    private String tipo;// de vehículo 
+    private String tipo;// de vehiculo 
     private String estado;//FUERA, EN_COLA_ENTRADA, ESTACIONADO, EN_COLA_SALIDA
 
     public Vehiculo(String placa, String marca, String modelo, String color, String tipo) {

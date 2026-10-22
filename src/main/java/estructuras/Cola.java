@@ -1,50 +1,55 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to edit this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package estructuras;
 
+import modelo.Vehiculo;
+
 /**
- * 
+ * Almacena un vehículo
  */
 class NodoCola {
-    private Object dato;
+    private Vehiculo vehiculo;
     private NodoCola siguiente;
 
-    public NodoCola(Object dato) {
-        this.dato = dato;
+    public NodoCola(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
         this.siguiente = null;
     }
 
-    public Object getDato() { return dato; }
-    public NodoCola getSiguiente() { return siguiente; }
-    public void setSiguiente(NodoCola siguiente) { this.siguiente = siguiente; }
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setSiguiente(NodoCola siguiente) {
+        this.siguiente = siguiente;
+    }
+
+    public NodoCola getSiguiente() {
+        return siguiente;
+    }
 }
 
 /**
- * 
+ * gestionar la llegada de vehículos a las garitas
  */
 public class Cola {
-    private NodoCola frente;
+    private NodoCola cabeza;
     private NodoCola fin;
     private int tamanio;
 
     public Cola() {
-        this.frente = null;
+        this.cabeza = null;
         this.fin = null;
         this.tamanio = 0;
     }
 
-    public boolean estaVacia() {
-        return frente == null;
-    }
-
-    // Encolar agrega un nuevo elemento al final de la cola
-    public void encolar(Object dato) {
-        NodoCola nuevo = new NodoCola(dato);
-        if (estaVacia()) {
-            frente = nuevo;
-            fin = nuevo;
+    // Encolar un vehículo
+    public synchronized void encolar(Vehiculo v) {
+        NodoCola nuevo = new NodoCola(v);
+        if (fin == null) {
+            cabeza = fin = nuevo;
         } else {
             fin.setSiguiente(nuevo);
             fin = nuevo;
@@ -52,19 +57,24 @@ public class Cola {
         tamanio++;
     }
 
-    // Desencolar que extrae y retorna el elemento que está al frente de la cola
-    public Object desencolar() {
-        if (estaVacia()) return null;
-        Object dato = frente.getDato();
-        frente = frente.getSiguiente();
-        if (frente == null) {
+    // Desencolar el vehículo
+    public synchronized Vehiculo desencolar() {
+        if (cabeza == null) return null;
+        
+        Vehiculo v = cabeza.getVehiculo();
+        cabeza = cabeza.getSiguiente();
+        if (cabeza == null) {
             fin = null;
         }
         tamanio--;
-        return dato;
+        return v;
     }
 
-    public int getTamanio() {
+    public synchronized boolean estaVacia() {
+        return cabeza == null;
+    }
+
+    public synchronized int getTamanio() {
         return tamanio;
     }
 }

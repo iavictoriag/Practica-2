@@ -9,10 +9,6 @@ import estructuras.ListaSimple;
  * @author vicky
  */
 
-/**
- * 
- * 
- */
 public class Usuario {
     
     private String id; // unico del residente

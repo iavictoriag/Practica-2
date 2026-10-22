@@ -9,29 +9,29 @@ import modelo.Usuario;
 import modelo.Vehiculo;
 import estructuras.ListaSimple; 
 import estructuras.Parqueo;
+import estructuras.Pila; 
 
 /**
- * 
- * 
- * 
+ * Menú Principal
  * @author vicky
  */
 public class App {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ListaSimple listaUsuarios = new ListaSimple(); // almacena los usuarios registrados
+        ListaSimple listaUsuarios = new ListaSimple(); // Almacena los usuarios registrados
+        Pila pilaEventos = new Pila(); // Historial 
 
-        // inicia el parqqueo
+        // Inicia el parqueo
         Parqueo parqueoSocios = new Parqueo("SOCIO");
         Parqueo parqueoGeneral = new Parqueo("GENERAL");
 
-        // iniciaa los 75 espacios Socios  A1-A25, B1-B25, C1-C25
+        // inicia 75 espacios Socios: A1-A25, B1-B25, C1-C25
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("A" + i);
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("B" + i);
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("C" + i);
 
-        // inicia los 75 espacios Generales E1-E15, F1-F15, G1-G15, H1-H15, I1-I15
+        // inicia 75 espacios Generales: E1-E15, F1-F15, G1-G15, H1-H15, I1-I15
         for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("E" + i);
         for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("F" + i);
         for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("G" + i);
@@ -40,27 +40,28 @@ public class App {
   
         int opcion = 0;
 
-        while (opcion != 4) {
+        while (opcion != 5) {
             System.out.println("\n==========================================");
             System.out.println("      SISTEMA RESIPARK - MENU PRINCIPAL   ");
             System.out.println("==========================================");
             System.out.println("1. Registrar Usuario");
-            System.out.println("2. Registrar Vehículo");
-            System.out.println("3. Mostrar Registros");
-            System.out.println("4. Salir");
+            System.out.println("2. Registrar Vehiculo y Estacionar");
+            System.out.println("3. Mostrar Estado de los Parqueos");
+            System.out.println("4. Mostrar Registros de Usuarios");
+            System.out.println("5. Salir");
             System.out.print("Seleccione una opcion: ");
 
-            // valida que sea un número entero
+            // mira si son #enteros
             if (scanner.hasNextInt()) {
                 opcion = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer de entrada
+                scanner.nextLine(); // Limpiar el buffer 
             } else {
                 System.out.println("Por favor, ingrese un numero valido.");
                 scanner.nextLine();
                 continue;
             }
 
-            //nuevo usuario residente
+            //Nuevo usuario residente
             if (opcion == 1) {
                 System.out.println("\n--- REGISTRO DE USUARIO ---");
                 System.out.print("Ingrese ID del usuario: ");
@@ -75,19 +76,20 @@ public class App {
                 System.out.print("Ingrese telefono: ");
                 String telefono = scanner.nextLine();
 
-                System.out.print("¿Es socio? (S = Si / N = No): ");
+                System.out.print("Es socio? (S = Si / N = No): ");
                 char esSocio = scanner.nextLine().toUpperCase().charAt(0);
 
-                // Crear nuevo usuario
+                // nuevo usuario
                 Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono, esSocio);
                 
-                // el usualio en la lista
+                // Insertar el usuario en la lista
                 listaUsuarios.insertar(usuarioNuevo);
+                pilaEventos.apilar("Se registro al usuario: " + nombre + " (ID: " + id + ")");
                 System.out.println("¡Usuario registrado con exito!");
 
-            //registrar vehiculo y asociarlo al residente correspondiente
+            // registrar vehculo y estacionarlo
             } else if (opcion == 2) {
-                System.out.println("\n--- REGISTRO DE VEHICULO ---");
+                System.out.println("\n--- REGISTRO Y ESTACIONAMIENTO DE VEHICULO ---");
                 System.out.print("Ingrese el ID del residente propietario: ");
                 String idResidente = scanner.nextLine();
 
@@ -111,6 +113,12 @@ public class App {
                 System.out.print("Ingrese la placa del vehiculo: ");
                 String placa = scanner.nextLine();
 
+                //Validar placa única
+                if (existePlacaGlobal(listaUsuarios, placa)) {
+                    System.out.println("Error: La placa '" + placa + "' ya esta registrada en el sistema.");
+                    continue; // Vuelve al menú
+                }
+
                 System.out.print("Ingrese la marca: ");
                 String marca = scanner.nextLine();
 
@@ -126,19 +134,52 @@ public class App {
                 // Crear el Vehículo
                 Vehiculo vehiculoNuevo = new Vehiculo(placa, marca, modelo, color, tipo);
                 
-                // Intentar agregarlo al residente
-                boolean agregado = propietario.agregarVehiculo(vehiculoNuevo);
-                if (agregado) {
-                    System.out.println("¡Vehiculo asociado exitosamente al residente " + propietario.getNombre() + "!");
+                // Agregarlo a la lista
+                boolean agregadoAlResidente = propietario.agregarVehiculo(vehiculoNuevo);
+                
+                if (agregadoAlResidente) {
+                    // asigna espacio
+                    boolean estacionado = false;
+                    
+                    if (propietario.getEsSocio() == 'S') {
+                        System.out.println("Residente SOCIO: Buscando espacio en zona exclusiva...");
+                        estacionado = parqueoSocios.estacionarVehiculo(vehiculoNuevo);
+                        
+                        // socios = lleno
+                        if (!estacionado) {
+                            System.out.println("Zona de socios llena. Intentando en zona general...");
+                            estacionado = parqueoGeneral.estacionarVehiculo(vehiculoNuevo);
+                        }
+                    } else {
+                        System.out.println("Residente NO SOCIO: Buscando espacio en zona general...");
+                        estacionado = parqueoGeneral.estacionarVehiculo(vehiculoNuevo);
+                    }
+
+                    if (estacionado) {
+                        pilaEventos.apilar("Se estaciono el vehiculo placa: " + placa);
+                        System.out.println("¡Vehiculo registrado y estacionado con exito!");
+                    } else {
+                        pilaEventos.apilar("Rechazado vehiculo placa: " + placa + " (Parqueo lleno)");
+                        System.out.println("Aviso: El vehiculo se registro al residente, pero el estacionamiento esta completamente lleno.");
+                    }
                 }
 
-            //mostrar los registros almacenados
+            // estado de los parqueos
             } else if (opcion == 3) {
-                System.out.println("\n--- REGISTROS EN EL SISTEMA ---");
-                listaUsuarios.mostrar();
+                System.out.println("\n--- ESTADO ACTUAL DE LOS PARQUEOS ---");
+                parqueoSocios.mostrarParqueo();
+                parqueoGeneral.mostrarParqueo();
 
-            // Opción 4: Salir del programa
+            // Mostrar registros de usuarios almacenados
             } else if (opcion == 4) {
+                System.out.println("\n--- REGISTROS DE USUARIOS EN EL SISTEMA ---");
+                listaUsuarios.mostrar();
+                
+                // Mostrar el historial 
+                pilaEventos.mostrarHistorial();
+
+            // Salir del programa
+            } else if (opcion == 5) {
                 System.out.println("\nSaliendo del sistema ResiPark... ¡Hasta luego!");
             } else {
                 System.out.println("Opcion no valida. Por favor, intente de nuevo.");
@@ -146,5 +187,41 @@ public class App {
         }
 
         scanner.close();
+    }
+
+    /**
+     * la placa no se repita
+     */
+    public static boolean existePlacaGlobal(ListaSimple listaUsuarios, String placaBusqueda) {
+        var nodoUsuario = listaUsuarios.getCabeza();
+        while (nodoUsuario != null) {
+            Usuario u = (Usuario) nodoUsuario.getDato();
+            var nodoVehiculo = u.getMisVehiculos().getCabeza();
+            while (nodoVehiculo != null) {
+                Vehiculo v = (Vehiculo) nodoVehiculo.getDato();
+                if (v.getPlaca().equalsIgnoreCase(placaBusqueda)) {
+                    return true; // la placa existe
+                }
+                nodoVehiculo = nodoVehiculo.getSiguiente();
+            }
+            nodoUsuario = nodoUsuario.getSiguiente();
+        }
+        return false; //  está libre
+    }
+
+    /**
+     * un residente estén FUERA
+     * permitir eliminarlo o cambiar su estatus 
+     */
+    public static boolean todosVehiculosFuera(Usuario usuario) {
+        var nodoVehiculo = usuario.getMisVehiculos().getCabeza();
+        while (nodoVehiculo != null) {
+            Vehiculo v = (Vehiculo) nodoVehiculo.getDato();
+            if (!v.getEstado().equalsIgnoreCase("FUERA")) {
+                return false; // vehículo está adentro o en cola
+            }
+            nodoVehiculo = nodoVehiculo.getSiguiente();
+        }
+        return true; // Todos fuera
     }
 }
