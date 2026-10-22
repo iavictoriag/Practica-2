@@ -21,6 +21,22 @@ public class App {
         Scanner scanner = new Scanner(System.in);
         ListaSimple listaUsuarios = new ListaSimple(); // almacena los usuarios registrados
 
+        // inicia el parqqueo
+        Parqueo parqueoSocios = new Parqueo("SOCIO");
+        Parqueo parqueoGeneral = new Parqueo("GENERAL");
+
+        // iniciaa los 75 espacios Socios  A1-A25, B1-B25, C1-C25
+        for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("A" + i);
+        for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("B" + i);
+        for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("C" + i);
+
+        // inicia los 75 espacios Generales E1-E15, F1-F15, G1-G15, H1-H15, I1-I15
+        for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("E" + i);
+        for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("F" + i);
+        for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("G" + i);
+        for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("H" + i);
+        for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("I" + i);
+  
         int opcion = 0;
 
         while (opcion != 4) {
