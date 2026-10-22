@@ -79,6 +79,33 @@ public class Parqueo {
         } while (actual != cabeza);
     }
 
+    //retirar un vehículo del parqueo buscando por su placa
+    public boolean retirarVehiculo(String placaBuscada) {
+        if (cabeza == null) return false;
+
+        NodoCircular actual = cabeza;
+        do {
+            EspacioParqueo espacio = actual.getEspacio();
+            
+            // ver sii está ocupado y si esta registrado
+            if (espacio.isOcupado() && espacio.getVehiculo() != null) {
+                if (espacio.getVehiculo().getPlaca().equalsIgnoreCase(placaBuscada)) {
+                    
+                    // Cambiamos el estado
+                    espacio.getVehiculo().setEstado("FUERA");
+                    
+                    // Liberamos el espacio
+                    espacio.setVehiculo(null);
+                    
+                    System.out.println("¡Vehiculo con placa " + placaBuscada + " retirado con éxito del espacio " + espacio.getCodigoEspacio() + "!");
+                    return true;
+                }
+            }
+            actual = actual.getSiguiente();
+        } while (actual != cabeza);
+
+        return false;
+    }
     public int getTamanio() {
         return tamanio;
     }

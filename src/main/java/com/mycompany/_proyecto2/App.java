@@ -10,6 +10,8 @@ import modelo.Vehiculo;
 import estructuras.ListaSimple; 
 import estructuras.Parqueo;
 import estructuras.Pila; 
+import hilos.GaritaEntrada;
+import hilos.GaritaSalida;
 
 /**
  * Menú Principal
@@ -224,4 +226,5 @@ public class App {
         }
         return true; // Todos fuera
     }
+    
 }
