@@ -14,7 +14,7 @@ public class Parqueo {
     private NodoCircular cabeza;
     private NodoCircular ultimoAsignado; // Puntero para la asignación circular equitativa
     private int tamanio;
-    private String tipoZona; // "SOCIO" o "GENERAL"
+    private String tipoZona; //SOCIO y GENERAL
 
     public Parqueo(String tipoZona) {
         this.cabeza = null;
@@ -41,6 +41,25 @@ public class Parqueo {
             nuevoNodo.setSiguiente(cabeza); // Cierra y apunta a la cabeza
         }
         tamanio++;
+    }
+//Asigna vehículo buscando el  espacio libre 
+    public boolean estacionarVehiculo(Vehiculo v) {
+        if (cabeza == null) return false;
+
+        NodoCircular inicioBusqueda = (ultimoAsignado != null) ? ultimoAsignado.getSiguiente() : cabeza;
+        NodoCircular actual = inicioBusqueda;
+
+        do {
+            EspacioParqueo espacio = actual.getEspacio();
+            if (!espacio.isOcupado()) {
+                espacio.setVehiculo(v);
+                return true;
+            }
+            actual = actual.getSiguiente();
+        } while (actual != inicioBusqueda);
+
+        System.out.println("Lo sentimos, no hay espacios disponibles en la zona " + tipoZona);
+        return false;
     }
 
     
