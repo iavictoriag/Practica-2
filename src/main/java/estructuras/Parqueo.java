@@ -53,6 +53,9 @@ public class Parqueo {
             EspacioParqueo espacio = actual.getEspacio();
             if (!espacio.isOcupado()) {
                 espacio.setVehiculo(v);
+                v.setEstado("ESTACIONADO");
+                ultimoAsignado = actual; // Actualizamos el puntero para la siguiente búsqueda
+                System.out.println("¡Vehículo " + v.getPlaca() + " estacionado con éxito en el espacio " + espacio.getCodigoEspacio() + "!");
                 return true;
             }
             actual = actual.getSiguiente();
@@ -62,5 +65,4 @@ public class Parqueo {
         return false;
     }
 
-    
 }
