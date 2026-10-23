@@ -88,6 +88,7 @@ public class VentanaPrincipal extends JFrame {
         add(panelBotones, BorderLayout.CENTER);
         //acciones de los botones 
         
+        //boton 1 
         btnRegistrarUsuario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {//boton 1
@@ -129,28 +130,85 @@ public class VentanaPrincipal extends JFrame {
                 JOptionPane.showMessageDialog(null, "¡Usuario registrado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-     
+        
+       // ==========================================
+        // 2. REGISTRAR VEHÍCULO Y ESTACIONAR
+        // ==========================================
         btnRegistrarVehiculo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Aquí abrirás el formulario para Registrar y Estacionar Vehículo.");
+                // 1. Pedir ID del residente propietario
+                String idResidente = JOptionPane.showInputDialog(null, "Ingrese el ID del residente propietario:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
+                if (idResidente == null || idResidente.trim().isEmpty()) return;
+
+                // Buscar al residente en la lista
+                Usuario propietario = null;
+                var actual = listaUsuarios.getCabeza();
+                while (actual != null) {
+                    Usuario u = (Usuario) actual.getDato();
+                    if (u.getId().equalsIgnoreCase(idResidente)) {
+                        propietario = u;
+                        break;
+                    }
+                    actual = actual.getSiguiente();
+                }
+
+                if (propietario == null) {
+                    JOptionPane.showMessageDialog(null, "Error: No se encontró un residente con el ID ingresado.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                //boton 2 datos del vehículo
+                String placa = JOptionPane.showInputDialog(null, "Ingrese la placa del vehículo:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
+                if (placa == null || placa.trim().isEmpty()) return;
+
+                String marca = JOptionPane.showInputDialog(null, "Ingrese la marca:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
+                if (marca == null || marca.trim().isEmpty()) return;
+
+                String modelo = JOptionPane.showInputDialog(null, "Ingrese el modelo/línea:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
+                if (modelo == null || modelo.trim().isEmpty()) return;
+
+                String color = JOptionPane.showInputDialog(null, "Ingrese el color:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
+                if (color == null || color.trim().isEmpty()) return;
+
+                String tipo = JOptionPane.showInputDialog(null, "Ingrese el tipo de vehículo:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
+                if (tipo == null || tipo.trim().isEmpty()) return;
+
+                // Crear Vehículo
+                Vehiculo vehiculoNuevo = new Vehiculo(placa, marca, modelo, color, tipo);
+
+                // Agregarlo al residente
+                boolean agregadoAlResidente = propietario.agregarVehiculo(vehiculoNuevo);
+
+                if (agregadoAlResidente) {
+                    boolean estacionado = false;
+
+                    // Asignar espacio según sea socio o general
+                    if (propietario.getEsSocio() == 'S') {
+                        estacionado = parqueoSocios.estacionarVehiculo(vehiculoNuevo);
+                        if (!estacionado) {
+                            estacionado = parqueoGeneral.estacionarVehiculo(vehiculoNuevo);
+                        }
+                    } else {
+                        estacionado = parqueoGeneral.estacionarVehiculo(vehiculoNuevo);
+                    }
+
+                    if (estacionado) {
+                        pilaEventos.apilar("Se estacionó el vehículo placa: " + placa);
+                        
+                        // Guardar en el archivo de texto (Persistencia)
+                        String lineaVehiculo = idResidente + "," + placa + "," + marca + "," + modelo + "," + color + "," + tipo + "," + vehiculoNuevo.getEstado();
+                        persistencia.ManejoArchivos.guardarTexto("vehiculos.txt", lineaVehiculo);
+
+                        JOptionPane.showMessageDialog(null, "¡Vehículo registrado y estacionado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        pilaEventos.apilar("Rechazado vehículo placa: " + placa + " (Parqueo lleno)");
+                        JOptionPane.showMessageDialog(null, "Aviso: El vehículo se registró al residente, pero el estacionamiento está completamente lleno.", "Parqueo Lleno", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
             }
         });
-
-        btnVerParqueos.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Aquí mostrarás el estado gráfico de los parqueos.");
-            }
-        });
-
-        btnVerUsuarios.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Aquí mostrarás la lista de usuarios y la pila de eventos.");
-            }
-        });
-
+        
         //botón Salir
         btnSalir.addActionListener(new ActionListener() {
             @Override
