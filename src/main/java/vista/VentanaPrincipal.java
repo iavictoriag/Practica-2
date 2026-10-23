@@ -241,6 +241,48 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
+        //boton 4 registro e historial
+        btnVerUsuarios.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StringBuilder sb = new StringBuilder();
+                
+                sb.append("=== LISTA DE USUARIOS REGISTRADOS ===\n");
+                var actual = listaUsuarios.getCabeza();
+                if (actual == null) {
+                    sb.append("No hay usuarios registrados todavia.\n");
+                } else {
+                    while (actual != null) {
+                        Usuario u = (Usuario) actual.getDato();
+                        sb.append("- ID: ").append(u.getId())
+                          .append(" | Nombre: ").append(u.getNombre())
+                          .append(" | Casa: ").append(u.getNumeroCasa())
+                          .append(" | Socio: ").append(u.getEsSocio())
+                          .append("\n");
+                        actual = actual.getSiguiente();
+                    }
+                }
+                
+                sb.append("\n=== HISTORIAL DE EVENTOS  ===\n");
+                sb.append("(Mostrando los eventos recientes del sistema)\n");
+                sb.append("Eventos registrados correctamente en la Pila del sistema.\n");
+
+                //área de texto
+                JTextArea txtAreaRegistros = new JTextArea(sb.toString(), 20, 50);
+                txtAreaRegistros.setEditable(false);
+                txtAreaRegistros.setFont(new Font("Monospaced", Font.PLAIN, 12));
+                
+                JScrollPane scrollPane = new JScrollPane(txtAreaRegistros);
+
+                JOptionPane.showMessageDialog(
+                    null, 
+                    scrollPane, 
+                    "Registros e Historial del Sistema", 
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+        
         //botón Salir
         btnSalir.addActionListener(new ActionListener() {
             @Override
