@@ -27,6 +27,32 @@ public class App {
         // Inicia el parqueo
         Parqueo parqueoSocios = new Parqueo("SOCIO");
         Parqueo parqueoGeneral = new Parqueo("GENERAL");
+        
+        // cargar archivos.txt 
+        try {
+            java.io.File archivo = new java.io.File("usuarios.txt");
+            if (archivo.exists()) {
+                java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(archivo));
+                String linea;
+                while ((linea = br.readLine()) != null) {
+                    String[] datos = linea.split(",");
+                    if (datos.length == 5) {
+                        String id = datos[0];
+                        String nombre = datos[1];
+                        String numeroCasa = datos[2];
+                        String telefono = datos[3];
+                        char esSocio = datos[4].charAt(0);
+
+                        Usuario u = new Usuario(id, nombre, numeroCasa, telefono, esSocio);
+                        listaUsuarios.insertar(u);
+                    }
+                }
+                br.close();
+                System.out.println(">>> [SISTEMA] Usuarios cargados exitosamente desde el archivo.");
+            }
+        } catch (Exception e) {
+            System.out.println(">>> [ERROR] No se pudo leer el archivo de usuarios: " + e.getMessage());
+        }
 
         // inicia 75 espacios Socios: A1-A25, B1-B25, C1-C25
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("A" + i);
@@ -77,7 +103,7 @@ public class App {
 
                 System.out.print("Ingrese telefono: ");
                 String telefono = scanner.nextLine();
-
+        
                 System.out.print("Es socio? (S = Si / N = No): ");
                 char esSocio = scanner.nextLine().toUpperCase().charAt(0);
 
@@ -195,9 +221,7 @@ public class App {
         scanner.close();
     }
 
-    /**
-     * la placa no se repita
-     */
+    //la placa se repite
     public static boolean existePlacaGlobal(ListaSimple listaUsuarios, String placaBusqueda) {
         var nodoUsuario = listaUsuarios.getCabeza();
         while (nodoUsuario != null) {
@@ -215,10 +239,7 @@ public class App {
         return false; //  está libre
     }
 
-    /**
-     * 
-     * permitir eliminarlo o cambiar su estatus 
-     */
+    //prmitir eliminarlo o cambiar su estatus 
     public static boolean todosVehiculosFuera(Usuario usuario) {
         var nodoVehiculo = usuario.getMisVehiculos().getCabeza();
         while (nodoVehiculo != null) {
