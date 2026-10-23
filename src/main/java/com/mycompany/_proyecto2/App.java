@@ -83,11 +83,15 @@ public class App {
 
                 // nuevo usuario
                 Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono, esSocio);
-                
-                // Insertar el usuario en la lista
+                //usuario en la lista
                 listaUsuarios.insertar(usuarioNuevo);
                 pilaEventos.apilar("Se registro al usuario: " + nombre + " (ID: " + id + ")");
-                System.out.println("¡Usuario registrado con exito!");
+                
+                // perisistencia
+                String lineaTexto = id + "," + nombre + "," + numeroCasa + "," + telefono + "," + esSocio;
+                persistencia.ManejoArchivos.guardarTexto("usuarios.txt", lineaTexto);
+                
+                System.out.println("Usuario registrado con exito!");
 
             // registrar vehculo y estacionarlo
             } else if (opcion == 2) {
@@ -159,7 +163,7 @@ public class App {
 
                     if (estacionado) {
                         pilaEventos.apilar("Se estaciono el vehiculo placa: " + placa);
-                        System.out.println("¡Vehiculo registrado y estacionado con exito!");
+                        System.out.println("Vehiculo registrado y estacionado con exito!");
                     } else {
                         pilaEventos.apilar("Rechazado vehiculo placa: " + placa + " (Parqueo lleno)");
                         System.out.println("Aviso: El vehiculo se registro al residente, pero el estacionamiento esta completamente lleno.");
@@ -212,7 +216,7 @@ public class App {
     }
 
     /**
-     * un residente estén FUERA
+     * 
      * permitir eliminarlo o cambiar su estatus 
      */
     public static boolean todosVehiculosFuera(Usuario usuario) {

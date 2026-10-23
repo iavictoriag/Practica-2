@@ -67,7 +67,7 @@ public class Parqueo {
  // estado de los espacios
     public void mostrarParqueo() {
         if (cabeza == null) {
-            System.out.println("El parqueo de zona " + tipoZona + " no está inicializado.");
+            System.out.println("El parqueo de zona " + tipoZona + " no esta inicializado.");
             return;
         }
 

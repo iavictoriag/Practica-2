@@ -7,7 +7,7 @@ package estructuras;
 import modelo.Vehiculo;
 
 /**
- * Almacena un vehículo
+ * Almacena un vehiculo
  */
 class NodoCola {
     private Vehiculo vehiculo;
@@ -32,7 +32,7 @@ class NodoCola {
 }
 
 /**
- * gestionar la llegada de vehículos a las garitas
+ * gestionar la llegada de vehiculos a las garitas
  */
 public class Cola {
     private NodoCola cabeza;
@@ -57,7 +57,7 @@ public class Cola {
         tamanio++;
     }
 
-    // Desencolar el vehículo
+    // Desencolar el vehiculo
     public synchronized Vehiculo desencolar() {
         if (cabeza == null) return null;
         

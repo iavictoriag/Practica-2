@@ -34,7 +34,7 @@ public class GaritaEntrada implements Runnable {
             synchronized (colaEntrada) {
                 while (colaEntrada.estaVacia() && activo) {
                     try {
-                        colaEntrada.wait(); //vehículo si la cola está vacía
+                        colaEntrada.wait(); //vehiculo si la cola esta vacía
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         break;
@@ -55,20 +55,17 @@ public class GaritaEntrada implements Runnable {
                     Thread.currentThread().interrupt();
                 }
 
-                // Intentar estacionar según el tipo de propietario (asumimos que v guarda referencia o se evalúa)
+                //estacionar x tipo de propietario
                 boolean estacionado = false;
-                
-                // Para simplificar la validación en el hilo, intentamos primero general o socios
-                // (Idealmente validamos el estatus de socio del dueño)
-                estacionado = parqueoGeneral.estacionarVehiculo(v);
+                                estacionado = parqueoGeneral.estacionarVehiculo(v);
 
                 synchronized (pilaEventos) {
                     if (estacionado) {
-                        pilaEventos.apilar("Garita " + nombreGarita + " estacionó vehículo " + v.getPlaca());
-                        System.out.println("[" + nombreGarita + "] ¡Vehículo " + v.getPlaca() + " estacionado con éxito!");
+                        pilaEventos.apilar("Garita " + nombreGarita + " estaciono vehiculo " + v.getPlaca());
+                        System.out.println("[" + nombreGarita + "] ¡Vehiculo " + v.getPlaca() + " estacionado con exito!");
                     } else {
                         pilaEventos.apilar("Garita " + nombreGarita + ": Rechazado " + v.getPlaca() + " (Parqueo lleno)");
-                        System.out.println("[" + nombreGarita + "] Parqueo lleno. Vehículo " + v.getPlaca() + " rechazado.");
+                        System.out.println("[" + nombreGarita + "] Parqueo lleno. Vehiculo " + v.getPlaca() + " rechazado.");
                     }
                 }
             }

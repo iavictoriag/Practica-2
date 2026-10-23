@@ -19,7 +19,7 @@ public class ListaSimple {
         this.tamanio = 0;
     }
 
-    // Comprobar si la lista está vacía
+    // Comprobar si la lista esta  vacía
     public boolean estaVacia() {
         return cabeza == null;
     }
