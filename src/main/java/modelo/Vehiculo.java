@@ -8,9 +8,6 @@ package modelo;
  *
  * @author vicky
  */
-
-/**
- **/
 public class Vehiculo {
     private String placa;// placa unica en todo el sistema
     private String marca;
