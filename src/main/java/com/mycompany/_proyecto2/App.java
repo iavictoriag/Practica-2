@@ -53,7 +53,59 @@ public class App {
         } catch (Exception e) {
             System.out.println(">>> [ERROR] No se pudo leer el archivo de usuarios: " + e.getMessage());
         }
+        // cargar en archivo txt
+        try {
+            java.io.File archivoV = new java.io.File("vehiculos.txt");
+            if (archivoV.exists()) {
+                java.io.BufferedReader brV = new java.io.BufferedReader(new java.io.FileReader(archivoV));
+                String lineaV;
+                while ((lineaV = brV.readLine()) != null) {
+                    String[] datosV = lineaV.split(",");
+                    if (datosV.length >= 7) {
+                        String idProp = datosV[0];
+                        String placa = datosV[1];
+                        String marca = datosV[2];
+                        String modelo = datosV[3];
+                        String color = datosV[4];
+                        String tipo = datosV[5];
+                        String estado = datosV[6];
 
+                        Vehiculo vCargado = new Vehiculo(placa, marca, modelo, color, tipo);
+                        vCargado.setEstado(estado);
+
+                        // Buscar al propietario para asociarle el vehículo
+                        Usuario prop = null;
+                        var actualU = listaUsuarios.getCabeza();
+                        while (actualU != null) {
+                            Usuario u = (Usuario) actualU.getDato();
+                            if (u.getId().equalsIgnoreCase(idProp)) {
+                                prop = u;
+                                break;
+                            }
+                            actualU = actualU.getSiguiente();
+                        }
+
+                        if (prop != null) {
+                            prop.agregarVehiculo(vCargado);
+                            
+                            // Si estaba estacionado,ocupa su espacio en el parqueo
+                            if (estado.equalsIgnoreCase("ESTACIONADO")) {
+                                if (prop.getEsSocio() == 'S') {
+                                    parqueoSocios.estacionarVehiculo(vCargado);
+                                } else {
+                                    parqueoGeneral.estacionarVehiculo(vCargado);
+                                }
+                            }
+                        }
+                    }
+                }
+                brV.close();
+                System.out.println(">>> [SISTEMA] Vehiculos y estado del parqueo restaurados con exito.");
+            }
+        } catch (Exception e) {
+            System.out.println(">>> [ERROR] No se pudo leer el archivo de vehiculos: " + e.getMessage());
+        }
+        
         // inicia 75 espacios Socios: A1-A25, B1-B25, C1-C25
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("A" + i);
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("B" + i);
@@ -190,6 +242,9 @@ public class App {
                     if (estacionado) {
                         pilaEventos.apilar("Se estaciono el vehiculo placa: " + placa);
                         System.out.println("Vehiculo registrado y estacionado con exito!");
+                        
+                        String lineaVehiculo = idResidente + "," + placa + "," + marca + "," + modelo + "," + color + "," + tipo + "," + vehiculoNuevo.getEstado();
+                        persistencia.ManejoArchivos.guardarTexto("vehiculos.txt", lineaVehiculo);
                     } else {
                         pilaEventos.apilar("Rechazado vehiculo placa: " + placa + " (Parqueo lleno)");
                         System.out.println("Aviso: El vehiculo se registro al residente, pero el estacionamiento esta completamente lleno.");
@@ -202,7 +257,7 @@ public class App {
                 parqueoSocios.mostrarParqueo();
                 parqueoGeneral.mostrarParqueo();
 
-            // Mostrar registros de usuarios almacenados
+           // Mostrar registros de usuarios almacenados
             } else if (opcion == 4) {
                 System.out.println("\n--- REGISTROS DE USUARIOS EN EL SISTEMA ---");
                 listaUsuarios.mostrar();
@@ -250,6 +305,6 @@ public class App {
             nodoVehiculo = nodoVehiculo.getSiguiente();
         }
         return true; // Todos fuera
-    }
+    }   
     
 }
