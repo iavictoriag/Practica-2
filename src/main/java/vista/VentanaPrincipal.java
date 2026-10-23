@@ -209,6 +209,38 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
+        //boton 3 estado del parqueo
+        btnVerParqueos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //panel para el estado de los parqueos
+                JTextArea txtAreaEstado = new JTextArea(20, 40);
+                txtAreaEstado.setEditable(false);
+                txtAreaEstado.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+                StringBuilder sb = new StringBuilder();
+                sb.append("=== ESTADO DEL PARQUEO DE SOCIOS ===\n");
+                // Nota: Aquí recorremos o simulamos la vista del parqueo de socios
+                sb.append("Espacios A1-A25, B1-B25, C1-C25\n");
+                sb.append("Revisa la consola o el sistema interno para detalles de ocupación.\n\n");
+                
+                sb.append("=== ESTADO DEL PARQUEO GENERAL ===\n");
+                sb.append("Espacios E1-E15, F1-F15, G1-G15, H1-H15, I1-I15\n");
+                
+                //esumen del Parqueo.
+                txtAreaEstado.setText(sb.toString());
+
+                JScrollPane scrollPane = new JScrollPane(txtAreaEstado);
+                
+                JOptionPane.showMessageDialog(
+                    null, 
+                    scrollPane, 
+                    "Estado Actual de los Parqueos", 
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+        
         //botón Salir
         btnSalir.addActionListener(new ActionListener() {
             @Override
