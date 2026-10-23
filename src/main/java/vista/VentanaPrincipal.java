@@ -90,11 +90,46 @@ public class VentanaPrincipal extends JFrame {
         
         btnRegistrarUsuario.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Aquí abrirás el formulario para Registrar Usuario.");
+            public void actionPerformed(ActionEvent e) {//boton 1
+                // Pedir ID
+                String id = JOptionPane.showInputDialog(null, "Ingrese ID del usuario:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+                if (id == null || id.trim().isEmpty()) return; // Si cancela o esta vacío
+
+                // Pedir Nombre
+                String nombre = JOptionPane.showInputDialog(null, "Ingrese nombre completo:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+                if (nombre == null || nombre.trim().isEmpty()) return;
+
+                // Pedir Número de Casa
+                String numeroCasa = JOptionPane.showInputDialog(null, "Ingrese numero de casa:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+                if (numeroCasa == null || numeroCasa.trim().isEmpty()) return;
+
+                // Pedir Teléfono
+                String telefono = JOptionPane.showInputDialog(null, "Ingrese telefono:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+                if (telefono == null || telefono.trim().isEmpty()) return;
+
+                // Pedir si es Socio
+                String socioStr = JOptionPane.showInputDialog(null, "¿Es socio? (S = Si / N = No):", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
+                if (socioStr == null || socioStr.trim().isEmpty()) return;
+                
+                char esSocio = socioStr.toUpperCase().charAt(0);
+                if (esSocio != 'S' && esSocio != 'N') {
+                    JOptionPane.showMessageDialog(null, "Error: Debe ingresar 'S' o 'N' para el estado de socio.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Crear objeto Usuario y guardarlo en la estructura
+                Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono, esSocio);
+                listaUsuarios.insertar(usuarioNuevo);
+                pilaEventos.apilar("Se registró al usuario: " + nombre + " (ID: " + id + ")");
+
+                // Guardar en el archivo de texto (Persistencia)
+                String lineaTexto = id + "," + nombre + "," + numeroCasa + "," + telefono + "," + esSocio;
+                persistencia.ManejoArchivos.guardarTexto("usuarios.txt", lineaTexto);
+
+                JOptionPane.showMessageDialog(null, "¡Usuario registrado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
         });
-
+     
         btnRegistrarVehiculo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
