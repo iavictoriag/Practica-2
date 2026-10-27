@@ -17,6 +17,7 @@ import estructuras.Parqueo;
 import estructuras.Pila;
 import modelo.Usuario;
 import modelo.Vehiculo;
+import modelo.EspacioParqueo;
 
 public class VentanaPrincipal extends JFrame {
     
@@ -27,13 +28,13 @@ public class VentanaPrincipal extends JFrame {
     private Parqueo parqueoGeneral;
 
     public VentanaPrincipal() {
-        // Inicializar estructuras
+        //estructura
         listaUsuarios = new ListaSimple();
         pilaEventos = new Pila();
         parqueoSocios = new Parqueo("SOCIO");
         parqueoGeneral = new Parqueo("GENERAL");
 
-        // Inicializar espacios de parqueo 75 socios y 75 generales
+        //espacios de parqueo 75 socios y 75 generales
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("A" + i);
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("B" + i);
         for (int i = 1; i <= 25; i++) parqueoSocios.insertarEspacio("C" + i);
@@ -44,25 +45,34 @@ public class VentanaPrincipal extends JFrame {
         for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("H" + i);
         for (int i = 1; i <= 15; i++) parqueoGeneral.insertarEspacio("I" + i);
 
-        // Configuración de la ventana principal
+        //ventana principal
         setTitle("Sistema ResiPark - Interfaz Gráfica");
         setSize(850, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Layout principal
+        // Fondo blanco ventana
+        getContentPane().setBackground(Color.WHITE);
+
+        // titulo principal
         setLayout(new BorderLayout());
 
-        // Panel de Título 
+        // Colores 
+        Color rosaPersonalizado = new Color(255, 140, 170); //color rosa
+
+        // Panel de Título
         JLabel lblTitulo = new JLabel("GESTIÓN DE PARQUEO - RESIPARK", JLabel.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 22));
+        lblTitulo.setForeground(rosaPersonalizado);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        lblTitulo.setOpaque(false);
         add(lblTitulo, BorderLayout.NORTH);
 
-        // Panel Central con Botones para el main
+        //botones para el main
         JPanel panelBotones = new JPanel();
         panelBotones.setLayout(new GridLayout(5, 1, 12, 12));
         panelBotones.setBorder(BorderFactory.createEmptyBorder(30, 180, 30, 180));
+        panelBotones.setBackground(Color.WHITE);
 
         JButton btnRegistrarUsuario = new JButton("1. Registrar Usuario");
         JButton btnRegistrarVehiculo = new JButton("2. Registrar Vehículo y Estacionar");
@@ -72,7 +82,6 @@ public class VentanaPrincipal extends JFrame {
 
         // Estilo y color de los botones
         Font fuenteBoton = new Font("Arial", Font.BOLD, 14);
-        Color rosaPersonalizado = new Color(255, 140, 170); 
         Color colorTexto = Color.WHITE;
 
         JButton[] botones = {btnRegistrarUsuario, btnRegistrarVehiculo, btnVerParqueos, btnVerUsuarios, btnSalir};
@@ -84,6 +93,7 @@ public class VentanaPrincipal extends JFrame {
             btn.setOpaque(true);
             btn.setFocusPainted(false);
         }
+
         // Añadir botones al panel
         panelBotones.add(btnRegistrarUsuario);
         panelBotones.add(btnRegistrarVehiculo);
@@ -92,29 +102,23 @@ public class VentanaPrincipal extends JFrame {
         panelBotones.add(btnSalir);
 
         add(panelBotones, BorderLayout.CENTER);
-        //acciones de los botones 
         
-        //boton 1 
+        // boton 1 
         btnRegistrarUsuario.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {//boton 1
-                // Pedir ID
+            public void actionPerformed(ActionEvent e) {
                 String id = JOptionPane.showInputDialog(null, "Ingrese ID del usuario:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
-                if (id == null || id.trim().isEmpty()) return; // Si cancela o esta vacío
+                if (id == null || id.trim().isEmpty()) return;
 
-                // Pedir Nombre
                 String nombre = JOptionPane.showInputDialog(null, "Ingrese nombre completo:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
                 if (nombre == null || nombre.trim().isEmpty()) return;
 
-                // Pedir Número de Casa
                 String numeroCasa = JOptionPane.showInputDialog(null, "Ingrese numero de casa:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
                 if (numeroCasa == null || numeroCasa.trim().isEmpty()) return;
 
-                // Pedir Teléfono
                 String telefono = JOptionPane.showInputDialog(null, "Ingrese telefono:", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
                 if (telefono == null || telefono.trim().isEmpty()) return;
 
-                // Pedir si es Socio
                 String socioStr = JOptionPane.showInputDialog(null, "¿Es socio? (S = Si / N = No):", "Registro de Usuario", JOptionPane.QUESTION_MESSAGE);
                 if (socioStr == null || socioStr.trim().isEmpty()) return;
                 
@@ -124,12 +128,10 @@ public class VentanaPrincipal extends JFrame {
                     return;
                 }
 
-                // Crear objeto Usuario y guardarlo en la estructura
                 Usuario usuarioNuevo = new Usuario(id, nombre, numeroCasa, telefono, esSocio);
                 listaUsuarios.insertar(usuarioNuevo);
                 pilaEventos.apilar("Se registró al usuario: " + nombre + " (ID: " + id + ")");
 
-                // Guardar en el archivo de texto (Persistencia)
                 String lineaTexto = id + "," + nombre + "," + numeroCasa + "," + telefono + "," + esSocio;
                 persistencia.ManejoArchivos.guardarTexto("usuarios.txt", lineaTexto);
 
@@ -141,11 +143,9 @@ public class VentanaPrincipal extends JFrame {
         btnRegistrarVehiculo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Pedir ID 
                 String idResidente = JOptionPane.showInputDialog(null, "Ingrese el ID del residente propietario:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
                 if (idResidente == null || idResidente.trim().isEmpty()) return;
 
-                // Buscar al residente
                 Usuario propietario = null;
                 var actual = listaUsuarios.getCabeza();
                 while (actual != null) {
@@ -162,7 +162,6 @@ public class VentanaPrincipal extends JFrame {
                     return;
                 }
 
-                //boton 3 datos del vehículo
                 String placa = JOptionPane.showInputDialog(null, "Ingrese la placa del vehículo:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
                 if (placa == null || placa.trim().isEmpty()) return;
 
@@ -178,16 +177,12 @@ public class VentanaPrincipal extends JFrame {
                 String tipo = JOptionPane.showInputDialog(null, "Ingrese el tipo de vehículo:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
                 if (tipo == null || tipo.trim().isEmpty()) return;
 
-                // Crear Vehículo
                 Vehiculo vehiculoNuevo = new Vehiculo(placa, marca, modelo, color, tipo);
-
-                // Agregarlo al residente
                 boolean agregadoAlResidente = propietario.agregarVehiculo(vehiculoNuevo);
 
                 if (agregadoAlResidente) {
                     boolean estacionado = false;
 
-                    // Asignar espacio según sea socio o general
                     if (propietario.getEsSocio() == 'S') {
                         estacionado = parqueoSocios.estacionarVehiculo(vehiculoNuevo);
                         if (!estacionado) {
@@ -200,7 +195,6 @@ public class VentanaPrincipal extends JFrame {
                     if (estacionado) {
                         pilaEventos.apilar("Se estacionó el vehículo placa: " + placa);
                         
-                        // Guardar en el archivo de texto (Persistencia)
                         String lineaVehiculo = idResidente + "," + placa + "," + marca + "," + modelo + "," + color + "," + tipo + "," + vehiculoNuevo.getEstado();
                         persistencia.ManejoArchivos.guardarTexto("vehiculos.txt", lineaVehiculo);
 
@@ -213,76 +207,129 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-       //boton 3 estaado del parquep
+        //boton 3 parqueo
         btnVerParqueos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //ventana del mapa de los parqueos
                 JDialog dialogParqueos = new JDialog((Frame) null, "Mapa de Estado de Parqueos - ResiPark", true);
-                dialogParqueos.setSize(750, 550);
+                dialogParqueos.setSize(900, 650);
                 dialogParqueos.setLocationRelativeTo(null);
                 dialogParqueos.setLayout(new BorderLayout());
 
-                //pestaña socios y Generales
                 JTabbedPane pestañasParqueo = new JTabbedPane();
-                //panel delparqueo
+                //parqueo de socios
                 JPanel panelSocios = new JPanel();
-                panelSocios.setLayout(new GridLayout(0, 5, 8, 8)); // 5 columnas 
+                panelSocios.setLayout(new GridLayout(0, 5, 8, 8)); // 5 columnas ordenadas
                 panelSocios.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
                 panelSocios.setBackground(Color.WHITE);
 
-                //socios A, B, C
-                String[] espaciosSocios = {
-                    "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10",
-                    "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10",
-                    "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"
-                };
+                try {
+                } catch (Exception ex) {
+                
+                }
+                String[] letrasSocios = {"A", "B", "C"};
+                for (String letra : letrasSocios) {
+                    for (int i = 1; i <= 25; i++) {
+                        String codigo = letra + i;
+                        // Buscamos el espacio en socios
+                        EspacioParqueo espacioEncontrado = buscarEspacioEnParqueo(parqueoSocios, codigo);
+                        
+                        JButton btnEspacio = new JButton(codigo);
+                        btnEspacio.setFont(new Font("Arial", Font.BOLD, 11));
+                        
+                        if (espacioEncontrado != null && espacioEncontrado.isOcupado()) {
+                            btnEspacio.setBackground(new Color(255, 100, 100)); // Rojo si está ocupado
+                            String placaVehiculo = (espacioEncontrado.getVehiculo() != null) ? espacioEncontrado.getVehiculo().getPlaca() : "Ocupado";
+                            btnEspacio.setToolTipText("Ocupado - Placa: " + placaVehiculo);
+                        } else {
+                            btnEspacio.setBackground(new Color(144, 238, 144)); // Verde si está libre
+                            btnEspacio.setToolTipText("Disponible");
+                        }
+                        
+                        btnEspacio.setForeground(Color.DARK_GRAY);
+                        btnEspacio.setOpaque(true);
+                        btnEspacio.setFocusPainted(false);
+                        
+                        // clic en el espacio
+                        final EspacioParqueo espFinal = espacioEncontrado;
+                        btnEspacio.addActionListener(evt -> {
+                            if (espFinal != null && espFinal.isOcupado()) {
+                                String info = "Espacio: " + espFinal.getCodigoEspacio() + "\nEstado: OCUPADO";
+                                if (espFinal.getVehiculo() != null) {
+                                    info += "\nPlaca: " + espFinal.getVehiculo().getPlaca() +
+                                            "\nMarca: " + espFinal.getVehiculo().getMarca() +
+                                            "\nModelo: " + espFinal.getVehiculo().getModelo();
+                                }
+                                JOptionPane.showMessageDialog(dialogParqueos, info, "Detalle de Espacio", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(dialogParqueos, "Espacio " + codigo + " está LIBRE.", "Detalle de Espacio", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        });
 
-                for (String espacioId : espaciosSocios) {
-                    JButton btnEspacio = new JButton(espacioId);
-                    btnEspacio.setFont(new Font("Arial", Font.BOLD, 12));
-                    //verde = libre
-                    btnEspacio.setBackground(new Color(144, 238, 144)); //color verde
-                    btnEspacio.setForeground(Color.DARK_GRAY);
-                    btnEspacio.setOpaque(true);
-                    btnEspacio.setFocusPainted(false);
-                    panelSocios.add(btnEspacio);
+                        panelSocios.add(btnEspacio);
+                    }
                 }
 
                 JScrollPane scrollSocios = new JScrollPane(panelSocios);
-                pestañasParqueo.addTab("Parqueo de Socios", scrollSocios);
-                // parque general
+                pestañasParqueo.addTab("Parqueo de Socios (75)", scrollSocios);
+
+                // ----------------------------------------------------
+                // 2. PANEL DE PARQUEO GENERAL
+                // ----------------------------------------------------
                 JPanel panelGeneral = new JPanel();
-                panelGeneral.setLayout(new GridLayout(0, 5, 8, 8));
+                panelGeneral.setLayout(new GridLayout(0, 5, 8, 8)); // 5 columnas
                 panelGeneral.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
                 panelGeneral.setBackground(Color.WHITE);
 
-                String[] espaciosGeneral = {
-                    "E1", "E2", "E3", "E4", "E5", "F1", "F2", "F3", "F4", "F5",
-                    "G1", "G2", "G3", "G4", "G5", "H1", "H2", "H3", "H4", "H5",
-                    "I1", "I2", "I3", "I4", "I5"
-                };
+                String[] letrasGeneral = {"E", "F", "G", "H", "I"};
+                for (String letra : letrasGeneral) {
+                    for (int i = 1; i <= 15; i++) {
+                        String codigo = letra + i;
+                        EspacioParqueo espacioEncontrado = buscarEspacioEnParqueo(parqueoGeneral, codigo);
+                        
+                        JButton btnEspacio = new JButton(codigo);
+                        btnEspacio.setFont(new Font("Arial", Font.BOLD, 11));
+                        
+                        if (espacioEncontrado != null && espacioEncontrado.isOcupado()) {
+                            btnEspacio.setBackground(new Color(255, 100, 100)); // Rojo si está ocupado
+                            String placaVehiculo = (espacioEncontrado.getVehiculo() != null) ? espacioEncontrado.getVehiculo().getPlaca() : "Ocupado";
+                            btnEspacio.setToolTipText("Ocupado - Placa: " + placaVehiculo);
+                        } else {
+                            btnEspacio.setBackground(new Color(144, 238, 144)); // Verde si está libre
+                            btnEspacio.setToolTipText("Disponible");
+                        }
+                        
+                        btnEspacio.setForeground(Color.DARK_GRAY);
+                        btnEspacio.setOpaque(true);
+                        btnEspacio.setFocusPainted(false);
+                        
+                        final EspacioParqueo espFinal = espacioEncontrado;
+                        btnEspacio.addActionListener(evt -> {
+                            if (espFinal != null && espFinal.isOcupado()) {
+                                String info = "Espacio: " + espFinal.getCodigoEspacio() + "\nEstado: OCUPADO";
+                                if (espFinal.getVehiculo() != null) {
+                                    info += "\nPlaca: " + espFinal.getVehiculo().getPlaca() +
+                                            "\nMarca: " + espFinal.getVehiculo().getMarca() +
+                                            "\nModelo: " + espFinal.getVehiculo().getModelo();
+                                }
+                                JOptionPane.showMessageDialog(dialogParqueos, info, "Detalle de Espacio", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(dialogParqueos, "Espacio " + codigo + " está LIBRE.", "Detalle de Espacio", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        });
 
-                for (String espacioId : espaciosGeneral) {
-                    JButton btnEspacio = new JButton(espacioId);
-                    btnEspacio.setFont(new Font("Arial", Font.BOLD, 12));
-                    // Color verde por defecto (libre)
-                    btnEspacio.setBackground(new Color(144, 238, 144)); 
-                    btnEspacio.setForeground(Color.DARK_GRAY);
-                    btnEspacio.setOpaque(true);
-                    btnEspacio.setFocusPainted(false);
-                    panelGeneral.add(btnEspacio);
+                        panelGeneral.add(btnEspacio);
+                    }
                 }
 
                 JScrollPane scrollGeneral = new JScrollPane(panelGeneral);
-                pestañasParqueo.addTab("Parqueo General", scrollGeneral);
+                pestañasParqueo.addTab("Parqueo General (75)", scrollGeneral);
 
-                //ventana de parqueos
                 dialogParqueos.add(pestañasParqueo, BorderLayout.CENTER);
 
-                //boton para cerrar el mapa
+                //cerrar el mapa
                 JButton btnCerrarMapa = new JButton("Cerrar Mapa");
-                btnCerrarMapa.setBackground(new Color(255, 140, 170)); //color rosa
+                btnCerrarMapa.setBackground(rosaPersonalizado);
                 btnCerrarMapa.setForeground(Color.WHITE);
                 btnCerrarMapa.setOpaque(true);
                 btnCerrarMapa.setFont(new Font("Arial", Font.BOLD, 13));
@@ -297,7 +344,7 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-        //boton 5 registro e historial
+        // boton 4 registro e historial
         btnVerUsuarios.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -306,7 +353,7 @@ public class VentanaPrincipal extends JFrame {
                 sb.append("=== LISTA DE USUARIOS REGISTRADOS ===\n");
                 var actual = listaUsuarios.getCabeza();
                 if (actual == null) {
-                    sb.append("No hay usuarios registrados todavia.\n");
+                    sb.append("No hay usuarios registrados todavía.\n");
                 } else {
                     while (actual != null) {
                         Usuario u = (Usuario) actual.getDato();
@@ -319,11 +366,9 @@ public class VentanaPrincipal extends JFrame {
                     }
                 }
                 
-                sb.append("\n=== HISTORIAL DE EVENTOS  ===\n");
-                sb.append("(Mostrando los eventos recientes del sistema)\n");
-                sb.append("Eventos registrados correctamente en la Pila del sistema.\n");
+                sb.append("\n=== HISTORIAL DE EVENTOS ===\n");
+                sb.append("Eventos registrados en la pila del sistema correctamente.\n");
 
-                //área de texto
                 JTextArea txtAreaRegistros = new JTextArea(sb.toString(), 20, 50);
                 txtAreaRegistros.setEditable(false);
                 txtAreaRegistros.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -339,7 +384,7 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-        //botón Salir
+        // botón Salir
         btnSalir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -350,14 +395,18 @@ public class VentanaPrincipal extends JFrame {
                     JOptionPane.YES_NO_OPTION
                 );
                 if (confirmacion == JOptionPane.YES_OPTION) {
-                    System.exit(0); // Cierra por completo
+                    System.exit(0);
                 }
             }
         });
     }
 
+    //buscar espacio 
+    private EspacioParqueo buscarEspacioEnParqueo(Parqueo parqueoObj, String codigoBuscado) {
+        return parqueoObj.buscarEspacioPorCodigo(codigoBuscado);
+    }
+
     public static void main(String[] args) {
-        // Ejecutar la interfaz gráfica 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

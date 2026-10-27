@@ -109,5 +109,17 @@ public class Parqueo {
     public int getTamanio() {
         return tamanio;
     }
-        
+       // buscar un espacio 
+    public EspacioParqueo buscarEspacioPorCodigo(String codigo) {
+        if (cabeza == null) return null;
+        NodoCircular actual = cabeza;
+        do {
+            EspacioParqueo esp = actual.getEspacio();
+            if (esp.getCodigoEspacio().equalsIgnoreCase(codigo)) {
+                return esp;
+            }
+            actual = actual.getSiguiente();
+        } while (actual != cabeza);
+        return null;
+    } 
 }
