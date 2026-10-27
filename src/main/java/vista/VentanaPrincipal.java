@@ -70,14 +70,20 @@ public class VentanaPrincipal extends JFrame {
         JButton btnVerUsuarios = new JButton("4. Ver Registros e Historial");
         JButton btnSalir = new JButton("5. Salir"); 
 
-        // Estilo de botones
-        Font fuenteBoton = new Font("Arial", Font.PLAIN, 14);
-        btnRegistrarUsuario.setFont(fuenteBoton);
-        btnRegistrarVehiculo.setFont(fuenteBoton);
-        btnVerParqueos.setFont(fuenteBoton);
-        btnVerUsuarios.setFont(fuenteBoton);
-        btnSalir.setFont(fuenteBoton);
+        // Estilo y color de los botones
+        Font fuenteBoton = new Font("Arial", Font.BOLD, 14);
+        Color rosaPersonalizado = new Color(255, 140, 170); 
+        Color colorTexto = Color.WHITE;
 
+        JButton[] botones = {btnRegistrarUsuario, btnRegistrarVehiculo, btnVerParqueos, btnVerUsuarios, btnSalir};
+
+        for (JButton btn : botones) {
+            btn.setFont(fuenteBoton);
+            btn.setBackground(rosaPersonalizado);
+            btn.setForeground(colorTexto);
+            btn.setOpaque(true);
+            btn.setFocusPainted(false);
+        }
         // Añadir botones al panel
         panelBotones.add(btnRegistrarUsuario);
         panelBotones.add(btnRegistrarVehiculo);
@@ -131,17 +137,15 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-       // ==========================================
-        // 2. REGISTRAR VEHÍCULO Y ESTACIONAR
-        // ==========================================
+       // boton 2 registrar
         btnRegistrarVehiculo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 1. Pedir ID del residente propietario
+                //Pedir ID 
                 String idResidente = JOptionPane.showInputDialog(null, "Ingrese el ID del residente propietario:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
                 if (idResidente == null || idResidente.trim().isEmpty()) return;
 
-                // Buscar al residente en la lista
+                // Buscar al residente
                 Usuario propietario = null;
                 var actual = listaUsuarios.getCabeza();
                 while (actual != null) {
@@ -158,7 +162,7 @@ public class VentanaPrincipal extends JFrame {
                     return;
                 }
 
-                //boton 2 datos del vehículo
+                //boton 3 datos del vehículo
                 String placa = JOptionPane.showInputDialog(null, "Ingrese la placa del vehículo:", "Registro de Vehículo", JOptionPane.QUESTION_MESSAGE);
                 if (placa == null || placa.trim().isEmpty()) return;
 
@@ -209,7 +213,7 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-        //boton 3 estado del parqueo
+        //boton 4 estado del parqueo
         btnVerParqueos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -241,7 +245,7 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-        //boton 4 registro e historial
+        //boton 5 registro e historial
         btnVerUsuarios.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
