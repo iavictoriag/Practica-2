@@ -213,35 +213,87 @@ public class VentanaPrincipal extends JFrame {
             }
         });
         
-        //boton 4 estado del parqueo
+       //boton 3 estaado del parquep
         btnVerParqueos.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //panel para el estado de los parqueos
-                JTextArea txtAreaEstado = new JTextArea(20, 40);
-                txtAreaEstado.setEditable(false);
-                txtAreaEstado.setFont(new Font("Monospaced", Font.PLAIN, 12));
+                //ventana del mapa de los parqueos
+                JDialog dialogParqueos = new JDialog((Frame) null, "Mapa de Estado de Parqueos - ResiPark", true);
+                dialogParqueos.setSize(750, 550);
+                dialogParqueos.setLocationRelativeTo(null);
+                dialogParqueos.setLayout(new BorderLayout());
 
-                StringBuilder sb = new StringBuilder();
-                sb.append("=== ESTADO DEL PARQUEO DE SOCIOS ===\n");
-                // Nota: Aquí recorremos o simulamos la vista del parqueo de socios
-                sb.append("Espacios A1-A25, B1-B25, C1-C25\n");
-                sb.append("Revisa la consola o el sistema interno para detalles de ocupación.\n\n");
-                
-                sb.append("=== ESTADO DEL PARQUEO GENERAL ===\n");
-                sb.append("Espacios E1-E15, F1-F15, G1-G15, H1-H15, I1-I15\n");
-                
-                //esumen del Parqueo.
-                txtAreaEstado.setText(sb.toString());
+                //pestaña socios y Generales
+                JTabbedPane pestañasParqueo = new JTabbedPane();
+                //panel delparqueo
+                JPanel panelSocios = new JPanel();
+                panelSocios.setLayout(new GridLayout(0, 5, 8, 8)); // 5 columnas 
+                panelSocios.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+                panelSocios.setBackground(Color.WHITE);
 
-                JScrollPane scrollPane = new JScrollPane(txtAreaEstado);
-                
-                JOptionPane.showMessageDialog(
-                    null, 
-                    scrollPane, 
-                    "Estado Actual de los Parqueos", 
-                    JOptionPane.INFORMATION_MESSAGE
-                );
+                //socios A, B, C
+                String[] espaciosSocios = {
+                    "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "A10",
+                    "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10",
+                    "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10"
+                };
+
+                for (String espacioId : espaciosSocios) {
+                    JButton btnEspacio = new JButton(espacioId);
+                    btnEspacio.setFont(new Font("Arial", Font.BOLD, 12));
+                    //verde = libre
+                    btnEspacio.setBackground(new Color(144, 238, 144)); //color verde
+                    btnEspacio.setForeground(Color.DARK_GRAY);
+                    btnEspacio.setOpaque(true);
+                    btnEspacio.setFocusPainted(false);
+                    panelSocios.add(btnEspacio);
+                }
+
+                JScrollPane scrollSocios = new JScrollPane(panelSocios);
+                pestañasParqueo.addTab("Parqueo de Socios", scrollSocios);
+                // parque general
+                JPanel panelGeneral = new JPanel();
+                panelGeneral.setLayout(new GridLayout(0, 5, 8, 8));
+                panelGeneral.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+                panelGeneral.setBackground(Color.WHITE);
+
+                String[] espaciosGeneral = {
+                    "E1", "E2", "E3", "E4", "E5", "F1", "F2", "F3", "F4", "F5",
+                    "G1", "G2", "G3", "G4", "G5", "H1", "H2", "H3", "H4", "H5",
+                    "I1", "I2", "I3", "I4", "I5"
+                };
+
+                for (String espacioId : espaciosGeneral) {
+                    JButton btnEspacio = new JButton(espacioId);
+                    btnEspacio.setFont(new Font("Arial", Font.BOLD, 12));
+                    // Color verde por defecto (libre)
+                    btnEspacio.setBackground(new Color(144, 238, 144)); 
+                    btnEspacio.setForeground(Color.DARK_GRAY);
+                    btnEspacio.setOpaque(true);
+                    btnEspacio.setFocusPainted(false);
+                    panelGeneral.add(btnEspacio);
+                }
+
+                JScrollPane scrollGeneral = new JScrollPane(panelGeneral);
+                pestañasParqueo.addTab("Parqueo General", scrollGeneral);
+
+                //ventana de parqueos
+                dialogParqueos.add(pestañasParqueo, BorderLayout.CENTER);
+
+                //boton para cerrar el mapa
+                JButton btnCerrarMapa = new JButton("Cerrar Mapa");
+                btnCerrarMapa.setBackground(new Color(255, 140, 170)); //color rosa
+                btnCerrarMapa.setForeground(Color.WHITE);
+                btnCerrarMapa.setOpaque(true);
+                btnCerrarMapa.setFont(new Font("Arial", Font.BOLD, 13));
+                btnCerrarMapa.addActionListener(evt -> dialogParqueos.dispose());
+
+                JPanel panelSur = new JPanel();
+                panelSur.setBackground(Color.WHITE);
+                panelSur.add(btnCerrarMapa);
+                dialogParqueos.add(panelSur, BorderLayout.SOUTH);
+
+                dialogParqueos.setVisible(true);
             }
         });
         
