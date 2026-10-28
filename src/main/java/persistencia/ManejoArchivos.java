@@ -22,7 +22,7 @@ public class ManejoArchivos {
         FileWriter fichero = null;
         PrintWriter pw = null;
         try {
-            // El 'true' al final permite agregar texto al archivo sin sobreescribir lo anterior
+            //sagregar texto al archivo sin sobreescribir lo anterior
             fichero = new FileWriter(nombreArchivo, true);
             pw = new PrintWriter(fichero);
             pw.println(contenido);

@@ -12,9 +12,9 @@ import modelo.Vehiculo;
  */
 public class Parqueo {
     private NodoCircular cabeza;
-    private NodoCircular ultimoAsignado; // Puntero para la asignación circular equitativa
+    private NodoCircular ultimoAsignado; // asigna circular 
     private int tamanio;
-    private String tipoZona; //SOCIO y GENERAL
+    private String tipoZona; //socio y general
 
     public Parqueo(String tipoZona) {
         this.cabeza = null;
@@ -23,7 +23,7 @@ public class Parqueo {
         this.tipoZona = tipoZona;
     }
 
-    //insertar un espacio en estructura circular
+    //insertar un espacio 
     public void insertarEspacio(String codigo) {
         EspacioParqueo nuevoEspacio = new EspacioParqueo(codigo, tipoZona);
         NodoCircular nuevoNodo = new NodoCircular(nuevoEspacio);
@@ -54,7 +54,7 @@ public class Parqueo {
             if (!espacio.isOcupado()) {
                 espacio.setVehiculo(v);
                 v.setEstado("ESTACIONADO");
-                ultimoAsignado = actual; // Actualizamos el puntero para la siguiente búsqueda
+                ultimoAsignado = actual; // puntero para la siguiente búsqueda
                 System.out.println("¡Vehiculo " + v.getPlaca() + " estacionado con exito en el espacio " + espacio.getCodigoEspacio() + "!");
                 return true;
             }
@@ -79,7 +79,7 @@ public class Parqueo {
         } while (actual != cabeza);
     }
 
-    //retirar un vehículo del parqueo buscando por su placa
+    //retirar un vehículo del parqueo por  placa
     public boolean retirarVehiculo(String placaBuscada) {
         if (cabeza == null) return false;
 

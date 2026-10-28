@@ -80,4 +80,11 @@ public class Pila {
     public int getTamanio() {
         return tamanio;
     }
+    //  vaciar el historial
+    public void limpiar() {
+        while (cima != null) {
+            desapilar();
+        }
+        System.out.println(">>> [PILA] El historial de eventos ha sido limpiado por completo.");
+    }
 }

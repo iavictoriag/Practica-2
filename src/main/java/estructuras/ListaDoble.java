@@ -43,7 +43,7 @@ public class ListaDoble {
         tamanio++;
     }
 
-    // Busca un residente dentro de la lista utilizando su ID único
+    // Busca un residente con ID 
     public Object buscarPorId(String idBuscado) {
         NodoDoble<Object> actual = cabeza;
         while (actual != null) {
@@ -53,10 +53,10 @@ public class ListaDoble {
             }
             actual = actual.getSiguiente();
         }
-        return null; // Si no lo encuentra, retorna nulo
+        return null; // Si no lo encuentra nulo
     }
 
-    // Recorre e imprime los elementos desde el inicio hasta el final
+    // imprime los elementos desde el inicio hasta el final
     public void mostrarAdelante() {
         NodoDoble<Object> actual = cabeza;
         while (actual != null) {

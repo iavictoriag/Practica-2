@@ -32,7 +32,7 @@ class NodoCola {
 }
 
 /**
- * gestionar la llegada de vehiculos a las garitas
+ * vehiculo a las garitas
  */
 public class Cola {
     private NodoCola cabeza;

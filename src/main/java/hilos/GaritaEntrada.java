@@ -15,11 +15,7 @@ import estructuras.Pila;
 import modelo.Usuario;
 import modelo.Vehiculo;
 
-/**
- * 
- * vehículos en Cola de espera
- * 
- */
+
 public class GaritaEntrada extends Thread {
 
     private Cola colaEntrada;
